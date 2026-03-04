@@ -85,73 +85,6 @@ const rightWall = Bodies.rectangle(width + 50, height / 2, 100, height, { isStat
 
 Composite.add(world, [...boxes, ground, ceil, leftWall, rightWall]);
 
-// --- 磁力交互逻辑 ---
-
-let attractedBalls = [];
-const maxAttractionCount = 5;
-const attractionRadius = 400;
-
-// 监听鼠标按下
-Events.on(mouseConstraint, 'mousedown', () => {
-    // 获取所有的球体
-    const allBodies = Composite.allBodies(world);
-    const balls = allBodies.filter(body => body.label !== 'shovel' && !body.isStatic);
-
-    // 判断当前所在的区域：上排还是下排
-    // topY 是上排箱子中心，bottomY 是下排中心。这里取中线作为分界。
-    const boundaryY = (topY + bottomY) / 2;
-    const isBottomZone = mouse.position.y > boundaryY;
-    const currentMaxCount = isBottomZone ? 5 : 1;
-
-    // 计算距离并排序
-    const sortedBalls = balls
-        .map(ball => {
-            const dx = ball.position.x - mouse.position.x;
-            const dy = ball.position.y - mouse.position.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            return { ball, distance };
-        })
-        .filter(entry => entry.distance < attractionRadius)
-        .sort((a, b) => a.distance - b.distance);
-
-    // 选取最近的 N 个
-    attractedBalls = sortedBalls.slice(0, currentMaxCount).map(entry => entry.ball);
-});
-
-// 监听鼠标松开
-Events.on(mouseConstraint, 'mouseup', () => {
-    attractedBalls = [];
-});
-
-// 在物理更新前应用引力
-Events.on(engine, 'beforeUpdate', () => {
-    if (attractedBalls.length > 0) {
-        attractedBalls.forEach(ball => {
-            const targetX = mouse.position.x;
-            const targetY = mouse.position.y;
-
-            // 计算方向和距离
-            const dx = targetX - ball.position.x;
-            const dy = targetY - ball.position.y;
-
-            // 使用平滑的速度控制
-            const stiffness = 0.1;
-            const vx = dx * stiffness;
-            const vy = dy * stiffness;
-
-            // 限制最大速度以防止穿墙
-            const maxSpeed = 15;
-            const currentSpeed = Math.sqrt(vx * vx + vy * vy);
-            if (currentSpeed > maxSpeed) {
-                const ratio = maxSpeed / currentSpeed;
-                Body.setVelocity(ball, { x: vx * ratio, y: vy * ratio });
-            } else {
-                Body.setVelocity(ball, { x: vx, y: vy });
-            }
-        });
-    }
-});
-
 // --- 创建球体 ---
 
 const ballRadius = 14;
@@ -176,9 +109,9 @@ function spawnBalls(x, y, w, h, count, color, stroke) {
 spawnBalls(leftX, topY, boxWidth, boxHeight, 9, '#ef4444', '#991b1b');
 spawnBalls(rightX, topY, boxWidth, boxHeight, 9, '#3b82f6', '#1e40af');
 
-// 下排：30红，30蓝
-spawnBalls(leftX, bottomY, boxWidth, bottomBoxHeight, 30, '#ef4444', '#991b1b');
-spawnBalls(rightX, bottomY, boxWidth, bottomBoxHeight, 30, '#3b82f6', '#1e40af');
+// 下排：80红，80蓝
+spawnBalls(leftX, bottomY, boxWidth, bottomBoxHeight, 80, '#ef4444', '#991b1b');
+spawnBalls(rightX, bottomY, boxWidth, bottomBoxHeight, 80, '#3b82f6', '#1e40af');
 
 // (已移至顶部)
 
