@@ -97,6 +97,12 @@ Events.on(mouseConstraint, 'mousedown', () => {
     const allBodies = Composite.allBodies(world);
     const balls = allBodies.filter(body => body.label !== 'shovel' && !body.isStatic);
 
+    // 判断当前所在的区域：上排还是下排
+    // topY 是上排箱子中心，bottomY 是下排中心。这里取中线作为分界。
+    const boundaryY = (topY + bottomY) / 2;
+    const isBottomZone = mouse.position.y > boundaryY;
+    const currentMaxCount = isBottomZone ? 5 : 1;
+
     // 计算距离并排序
     const sortedBalls = balls
         .map(ball => {
@@ -108,8 +114,8 @@ Events.on(mouseConstraint, 'mousedown', () => {
         .filter(entry => entry.distance < attractionRadius)
         .sort((a, b) => a.distance - b.distance);
 
-    // 选取最近的 5 个
-    attractedBalls = sortedBalls.slice(0, maxAttractionCount).map(entry => entry.ball);
+    // 选取最近的 N 个
+    attractedBalls = sortedBalls.slice(0, currentMaxCount).map(entry => entry.ball);
 });
 
 // 监听鼠标松开
