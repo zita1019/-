@@ -125,7 +125,55 @@ window.addEventListener('resize', () => {
     render.canvas.height = newHeight;
     render.options.width = newWidth;
     render.options.height = newHeight;
+});
 
-    // 这里如果需要完美适配屏幕尺寸变化，通常需要重新计算所有 Bodies 的位置
-    // 但为了演示简单，我们主要保证渲染区域更新
+// --- 思路提醒逻辑 ---
+
+const tipsData = [
+    "（1）上面的任务是和概率有关的，但下面这个新任务还受概率影响吗？",
+    "（2）如果把左右两个盒子看成一个大系统，左边的盒子和右边的盒子分别看成两个小系统，大系统中球的数量有变化吗？小系统中球的数量有变化吗？",
+    "（3）接着思考，如果大系统、小系统中的球总数都没有变化，而左边的盒子混入了x个右边的球，那么，右边的盒子混入了几个左边的球呢？"
+];
+
+let currentTipIndex = 0;
+const addTipBtn = document.getElementById('add-tip-btn');
+const tipsList = document.getElementById('tips-list');
+const toggleTipsBtn = document.getElementById('toggle-tips-btn');
+const tipsWidget = document.getElementById('tips-widget');
+
+// 切换收起/展开
+toggleTipsBtn.addEventListener('click', () => {
+    tipsWidget.classList.toggle('collapsed');
+    // 如果是展开状态显示减号，收起状态显示加号（或者箭头）
+    if (tipsWidget.classList.contains('collapsed')) {
+        toggleTipsBtn.textContent = '+';
+    } else {
+        toggleTipsBtn.textContent = '−';
+    }
+});
+
+addTipBtn.addEventListener('click', () => {
+    if (currentTipIndex < tipsData.length) {
+        const tipText = tipsData[currentTipIndex];
+
+        // 创建新提示元素
+        const tipElement = document.createElement('div');
+        tipElement.className = 'tip-item';
+        tipElement.textContent = tipText;
+
+        // 将新提示插入到列表顶部 (序号大的排在序号小的前面)
+        if (tipsList.firstChild) {
+            tipsList.insertBefore(tipElement, tipsList.firstChild);
+        } else {
+            tipsList.appendChild(tipElement);
+        }
+
+        currentTipIndex++;
+
+        // 如果所有提示都显示了，可以禁用按钮或改变样式
+        if (currentTipIndex >= tipsData.length) {
+            addTipBtn.style.opacity = '0.5';
+            addTipBtn.style.cursor = 'default';
+        }
+    }
 });

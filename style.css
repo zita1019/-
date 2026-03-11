@@ -6,7 +6,8 @@
     --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     width: 100%;
@@ -53,4 +54,127 @@ p {
 
 canvas {
     display: block;
+}
+
+/* 思路提醒挂件样式 */
+#tips-widget {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 320px;
+    z-index: 100;
+    pointer-events: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+#tips-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+
+#tips-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+#add-tip-btn,
+#toggle-tips-btn {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#add-tip-btn:hover,
+#toggle-tips-btn:hover {
+    transform: scale(1.1);
+    background: #7dd3fc;
+}
+
+/* 收起状态样式 */
+#tips-widget.collapsed {
+    width: 120px;
+}
+
+#tips-widget.collapsed #tips-list {
+    display: none;
+}
+
+#tips-widget.collapsed #add-tip-btn {
+    display: none;
+}
+
+#tips-widget.collapsed #toggle-tips-btn {
+    transform: rotate(180deg);
+}
+
+#tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+.tip-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--accent-color);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 自定义滚动条 */
+#tips-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+#tips-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#tips-list::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 2px;
 }

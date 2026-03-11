@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +10,26 @@
     <!-- 引入 Matter.js 物理引擎 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 </head>
+
 <body>
     <div id="ui-container">
         <h1>物理仿真室</h1>
         <p>拖拽球体在箱子之间移动</p>
     </div>
     <div id="canvas-container"></div>
+
+    <!-- 思路提醒模块 -->
+    <div id="tips-widget">
+        <div id="tips-header">
+            <span>思路提醒</span>
+            <div id="tips-controls">
+                <button id="add-tip-btn" title="添加提示">+</button>
+                <button id="toggle-tips-btn" title="收起/展开">−</button>
+            </div>
+        </div>
+        <div id="tips-list"></div>
+    </div>
     <script src="script.js"></script>
 </body>
+
 </html>
